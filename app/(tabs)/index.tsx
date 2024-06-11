@@ -3,6 +3,7 @@ import { ViroARScene, ViroARSceneNavigator } from '@reactvision/react-viro';
 import { ResizeMode, Video } from 'expo-av';
 import * as Haptics from 'expo-haptics';
 import React from 'react';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 function HelloWorldScene({ onInitialized }: { onInitialized?: () => void }) {
     return (
@@ -117,17 +118,21 @@ function ARScene() {
 
 export default function TabOneScreen() {
     const [isStarted, setIsStarted] = React.useState<boolean>(false);
-    return isStarted ? <ARScene /> : (
-        <>
-            <Pressable style={[styles.button, { bottom: '50%', transform: [{ translateY: 25 }] }]} onPress={() => (rumble(), setIsStarted(true))}>
-                <Text style={{
-                    fontWeight: 'bold',
-                    color: 'white',
-                    textTransform: 'uppercase',
-                }}>
-                    ENTER
-                </Text>
-            </Pressable>
-        </>
+    return (
+        <ErrorBoundary>
+            {isStarted ? <ARScene /> : (
+                <>
+                    <Pressable style={[styles.button, { bottom: '50%', transform: [{ translateY: 25 }] }]} onPress={() => (rumble(), setIsStarted(true))}>
+                        <Text style={{
+                            fontWeight: 'bold',
+                            color: 'white',
+                            textTransform: 'uppercase',
+                        }}>
+                            ENTER
+                        </Text>
+                    </Pressable>
+                </>
+            )}
+        </ErrorBoundary>
     );
 }
